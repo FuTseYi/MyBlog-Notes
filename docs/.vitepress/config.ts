@@ -80,6 +80,14 @@ const createSidebar = (root: string, prefix = '/') => {
 
 // ========== 三、VitePress 配置 ==========
 
+// 注意：如果网站部署在根目录下（例如使用自定义域名 https://your-domain.com/）
+// 请保持 '/'
+// 如果部署在 GitHub Pages 子路径（https://username.github.io/test/），则将 '/' 改为 '/test/'
+const deployPath = '/'
+
+// 根据环境动态设置 base 路径 (生产环境用 deployPath, 本地开发强制用 /)
+const base = process.env.NODE_ENV === 'production' ? deployPath : '/'
+
 export default withMermaid(defineConfig({
 
   // 路由重写：将 en 目录映射到根路径,作为默认语言内容
@@ -269,7 +277,7 @@ export default withMermaid(defineConfig({
     const pageUrl = `${SITE_CONFIG.url}${getPageUrl(pageData.relativePath)}`
     const title = pageData.frontmatter.title || pageData.title
     const description = pageData.frontmatter.description || pageData.description
-    const image = `${SITE_CONFIG.url}${SITE_CONFIG.logo}`
+    const image = `${SITE_CONFIG.url}${base}${SITE_CONFIG.logo.replace(/^\//, '')}`
     
     return [
       // 规范链接（避免重复内容）
